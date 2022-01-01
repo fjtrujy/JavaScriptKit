@@ -10,7 +10,7 @@ import _CJavaScriptKit
 /// alert("Hello, world")
 /// ```
 ///
-public class JSFunction: JSObject {
+public class JSFunction: JSObject, JSFunctionProtocol {
 
     /// Call this function with given `arguments` and binding given `this` as context.
     /// - Parameters:
@@ -18,13 +18,13 @@ public class JSFunction: JSObject {
     ///   - arguments: Arguments to be passed to this function.
     /// - Returns: The result of this call.
     @discardableResult
-    public func callAsFunction(this: JSObject? = nil, arguments: [ConvertibleToJSValue]) -> JSValue {
+    public func callAsFunction(this: JSObjectProtocol? = nil, arguments: [ConvertibleToJSValue]) -> JSValue {
         try! invokeJSFunction(self, arguments: arguments, this: this)
     }
 
     /// A variadic arguments version of `callAsFunction`.
     @discardableResult
-    public func callAsFunction(this: JSObject? = nil, _ arguments: ConvertibleToJSValue...) -> JSValue {
+    public func callAsFunction(this: JSObjectProtocol? = nil, _ arguments: ConvertibleToJSValue...) -> JSValue {
         self(this: this, arguments: arguments)
     }
 
@@ -38,7 +38,7 @@ public class JSFunction: JSObject {
     ///
     /// - Parameter arguments: Arguments to be passed to this constructor function.
     /// - Returns: A new instance of this constructor.
-    public func new(arguments: [ConvertibleToJSValue]) -> JSObject {
+    public func new(arguments: [ConvertibleToJSValue]) -> JSObjectProtocol {
         arguments.withRawJSValues { rawValues in
             rawValues.withUnsafeBufferPointer { bufferPointer in
                 let argv = bufferPointer.baseAddress
@@ -70,7 +70,7 @@ public class JSFunction: JSObject {
     }
 
     /// A variadic arguments version of `new`.
-    public func new(_ arguments: ConvertibleToJSValue...) -> JSObject {
+    public func new(_ arguments: ConvertibleToJSValue...) -> JSObjectProtocol {
         new(arguments: arguments)
     }
 
@@ -88,7 +88,7 @@ public class JSFunction: JSObject {
     }
 }
 
-internal func invokeJSFunction(_ jsFunc: JSFunction, arguments: [ConvertibleToJSValue], this: JSObject?) throws -> JSValue {
+internal func invokeJSFunction(_ jsFunc: JSFunction, arguments: [ConvertibleToJSValue], this: JSObjectProtocol?) throws -> JSValue {
     let (result, isException) = arguments.withRawJSValues { rawValues in
         rawValues.withUnsafeBufferPointer { bufferPointer -> (JSValue, Bool) in
             let argv = bufferPointer.baseAddress

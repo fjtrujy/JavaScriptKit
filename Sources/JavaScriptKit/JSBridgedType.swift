@@ -25,11 +25,11 @@ public protocol JSBridgedClass: JSBridgedType {
 
     /// The JavaScript object wrapped by this instance.
     /// You may assume that `jsObject instanceof Self.constructor == true`
-    var jsObject: JSObject { get }
+    var jsObject: JSObjectProtocol { get }
 
     /// Create an instance wrapping the given JavaScript object.
     /// You may assume that `jsObject instanceof Self.constructor`
-    init(unsafelyWrapping jsObject: JSObject)
+    init(unsafelyWrapping jsObject: JSObjectProtocol)
 }
 
 extension JSBridgedClass {
@@ -39,7 +39,7 @@ extension JSBridgedClass {
         self.init(from: object)
     }
 
-    public init?(from object: JSObject) {
+    public init?(from object: JSObjectProtocol) {
         guard object.isInstanceOf(Self.constructor) else { return nil }
         self.init(unsafelyWrapping: object)
     }

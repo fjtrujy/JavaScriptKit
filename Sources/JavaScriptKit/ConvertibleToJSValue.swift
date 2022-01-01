@@ -92,7 +92,7 @@ extension Dictionary where Value: ConvertibleToJSValue, Key == String {
 
 extension Dictionary: ConvertibleToJSValue where Value == ConvertibleToJSValue, Key == String {
     public func jsValue() -> JSValue {
-        let object = objectConstructor.new()
+        var object = objectConstructor.new()
         for (key, value) in self {
             object[key] = value.jsValue()
         }
@@ -147,7 +147,7 @@ extension Array where Element: ConvertibleToJSValue {
 
 extension Array: ConvertibleToJSValue where Element == ConvertibleToJSValue {
     public func jsValue() -> JSValue {
-        let array = arrayConstructor.new(count)
+        var array = arrayConstructor.new(count)
         for (index, element) in enumerated() {
             array[index] = element.jsValue()
         }

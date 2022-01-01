@@ -3,27 +3,27 @@
 public class JSArray: JSBridgedClass {
     public static let constructor = JSObject.global.Array.function!
 
-    static func isArray(_ object: JSObject) -> Bool {
+    static func isArray(_ object: JSObjectProtocol) -> Bool {
         constructor.isArray!(object).boolean!
     }
 
-    public let jsObject: JSObject
+    public let jsObject: JSObjectProtocol
 
     public required convenience init?(from value: JSValue) {
         guard let object = value.object else { return nil }
         self.init(object)
     }
 
-    /// Construct a `JSArray` from Array `JSObject`.
+    /// Construct a `JSArray` from Array `JSObjectProtocol`.
     /// Return `nil` if the object is not an Array.
     ///
-    /// - Parameter object: A `JSObject` expected to be a JavaScript Array
-    public convenience init?(_ jsObject: JSObject) {
+    /// - Parameter object: A `JSObjectProtocol` expected to be a JavaScript Array
+    public convenience init?(_ jsObject: JSObjectProtocol) {
         guard Self.isArray(jsObject) else { return nil }
         self.init(unsafelyWrapping: jsObject)
     }
 
-    public required init(unsafelyWrapping jsObject: JSObject) {
+    public required init(unsafelyWrapping jsObject: JSObjectProtocol) {
         self.jsObject = jsObject
     }
 }
@@ -36,9 +36,9 @@ extension JSArray: RandomAccessCollection {
     }
 
     public class Iterator: IteratorProtocol {
-        private let jsObject: JSObject
+        private let jsObject: JSObjectProtocol
         private var index = 0
-        init(jsObject: JSObject) {
+        init(jsObject: JSObjectProtocol) {
             self.jsObject = jsObject
         }
 
@@ -89,7 +89,7 @@ extension JSArray: RandomAccessCollection {
 }
 
 private let alwaysTrue = JSClosure { _ in .boolean(true) }
-private func getObjectValuesLength(_ object: JSObject) -> Int {
+private func getObjectValuesLength(_ object: JSObjectProtocol) -> Int {
     let values = object.filter!(alwaysTrue).object!
     return Int(values.length.number!)
 }

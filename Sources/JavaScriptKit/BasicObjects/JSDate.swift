@@ -11,7 +11,7 @@ public final class JSDate: JSBridgedClass {
     public static let constructor = JSObject.global.Date.function!
 
     /// The underlying JavaScript `Date` object.
-    public let jsObject: JSObject
+    public let jsObject: JSObjectProtocol
 
     /** Creates a new instance of the JavaScript `Date` class with a given amount of milliseconds
     that passed since midnight 01 January 1970 UTC.
@@ -39,7 +39,7 @@ public final class JSDate: JSBridgedClass {
         jsObject = Self.constructor.new(year, monthIndex, day, hours, minutes, seconds, milliseconds)
     }
 
-    public init(unsafelyWrapping jsObject: JSObject) {
+    public init(unsafelyWrapping jsObject: JSObjectProtocol) {
         self.jsObject = jsObject
     }
 

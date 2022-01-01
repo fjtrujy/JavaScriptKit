@@ -11,7 +11,7 @@ without type erasure. You should chain `then` and `catch` in those cases to avoi
 */
 public final class JSPromise: JSBridgedClass {
     /// The underlying JavaScript `Promise` object.
-    public let jsObject: JSObject
+    public let jsObject: JSObjectProtocol
 
     /// The underlying JavaScript `Promise` object wrapped as `JSValue`.
     public func jsValue() -> JSValue {
@@ -23,14 +23,14 @@ public final class JSPromise: JSBridgedClass {
     }
 
     /// This private initializer assumes that the passed object is a JavaScript `Promise`
-    public init(unsafelyWrapping object: JSObject) {
+    public init(unsafelyWrapping object: JSObjectProtocol) {
         self.jsObject = object
     }
 
     /** Creates a new `JSPromise` instance from a given JavaScript `Promise` object. If `jsObject`
     is not an instance of JavaScript `Promise`, this initializer will return `nil`.
     */
-    public convenience init?(_ jsObject: JSObject) {
+    public convenience init?(_ jsObject: JSObjectProtocol) {
         self.init(from: jsObject)
     }
 

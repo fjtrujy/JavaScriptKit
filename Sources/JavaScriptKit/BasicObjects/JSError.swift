@@ -7,14 +7,14 @@ public final class JSError: Error, JSBridgedClass {
     public static let constructor = JSObject.global.Error.function!
 
     /// The underlying JavaScript `Error` object.
-    public let jsObject: JSObject
+    public let jsObject: JSObjectProtocol
 
     /// Creates a new instance of the JavaScript `Error` class with a given message.
     public init(message: String) {
         jsObject = Self.constructor.new([message])
     }
 
-    public init(unsafelyWrapping jsObject: JSObject) {
+    public init(unsafelyWrapping jsObject: JSObjectProtocol) {
         self.jsObject = jsObject
     }
 

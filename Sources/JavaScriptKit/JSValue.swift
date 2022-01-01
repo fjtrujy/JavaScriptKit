@@ -1,12 +1,12 @@
 import _CJavaScriptKit
+import os
 
 /// `JSValue` represents a value in JavaScript.
-@dynamicMemberLookup
-public enum JSValue: JSValueProtocol, Equatable {
+public enum JSValue: JSValueProtocol {
     case boolean(Bool)
     case string(JSString)
     case number(Double)
-    case object(JSObject)
+    case object(JSObjectProtocol)
     case null
     case undefined
     case function(JSFunction)
@@ -51,11 +51,14 @@ public enum JSValue: JSValueProtocol, Equatable {
 
     /// Returns the `JSObject` of this JS value if its type is object.
     /// If not, returns `nil`.
-    public var object: JSObject? {
-        switch self {
-        case let .object(object): return object
-        default: return nil
+    public var object: JSObjectProtocol? {
+        get {
+            switch self {
+            case let .object(object): return object
+            default: return nil
+            }
         }
+        set {} // I still don't know why this is needed, even if it not used, maybe it is a bug.....
     }
 
     /// Returns the `JSFunction` of this JS value if its type is function.
@@ -175,7 +178,22 @@ extension JSValue: ExpressibleByNilLiteral {
     }
 }
 
-public func getJSValue(this: JSObject, name: JSString) -> JSValue {
+extension JSValue: Equatable {
+    // Now how enum uses protocol we explicitly must define the == function
+    public static func == (lhs: JSValue, rhs: JSValue) -> Bool {
+        switch (lhs, rhs) {
+        case (boolean(let x), boolean(let y)): return x == y
+        case (string(let x), string(let y)): return x == y
+        case (number(let x), number(let y)): return x == y
+        case (function(let x), function(let y)): return x == y
+        case (object(let x), object(let y)): return (x as? JSObject) == (y as? JSObject)
+        case (null, null), (undefined, undefined) : return true
+        default: return false
+        }
+    }
+}
+
+public func getJSValue(this: JSObjectProtocol, name: JSString) -> JSValue {
     var rawValue = RawJSValue()
     _get_prop(this.id, name.asInternalJSRef(),
               &rawValue.kind,
@@ -183,13 +201,13 @@ public func getJSValue(this: JSObject, name: JSString) -> JSValue {
     return rawValue.jsValue()
 }
 
-public func setJSValue(this: JSObject, name: JSString, value: JSValue) {
+public func setJSValue(this: JSObjectProtocol, name: JSString, value: JSValue) {
     value.withRawJSValue { rawValue in
         _set_prop(this.id, name.asInternalJSRef(), rawValue.kind, rawValue.payload1, rawValue.payload2)
     }
 }
 
-public func getJSValue(this: JSObject, index: Int32) -> JSValue {
+public func getJSValue(this: JSObjectProtocol, index: Int32) -> JSValue {
     var rawValue = RawJSValue()
     _get_subscript(this.id, index,
                    &rawValue.kind,
@@ -197,7 +215,7 @@ public func getJSValue(this: JSObject, index: Int32) -> JSValue {
     return rawValue.jsValue()
 }
 
-public func setJSValue(this: JSObject, index: Int32, value: JSValue) {
+public func setJSValue(this: JSObjectProtocol, index: Int32, value: JSValue) {
     value.withRawJSValue { rawValue in
         _set_subscript(this.id, index,
                        rawValue.kind,
@@ -231,7 +249,7 @@ extension JSValue: CustomStringConvertible {
             return string.description
         case .number(let number):
             return number.description
-        case .object(let object), .function(let object as JSObject):
+        case .object(let object), .function(let object as JSObjectProtocol):
             return object.toString!().fromJSValue()!
         case .null:
             return "null"

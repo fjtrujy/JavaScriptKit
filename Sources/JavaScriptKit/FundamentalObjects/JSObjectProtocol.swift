@@ -7,25 +7,15 @@
 
 import _CJavaScriptKit
 
-public protocol JSObjectProtocol {
+@dynamicMemberLookup
+public protocol JSObjectProtocol: ConvertibleToJSValue, CustomStringConvertible {
     var id: JavaScriptObjectRef { get }
     
-    @_disfavoredOverload
     subscript(_ name: String) -> ((ConvertibleToJSValue...) -> JSValue)? { get }
-    
-    @_disfavoredOverload
     subscript(dynamicMember name: String) -> ((ConvertibleToJSValue...) -> JSValue)? { get }
-    
-    @_disfavoredOverload
     subscript(dynamicMember name: String) -> JSValue { get set }
-    
-    @_disfavoredOverload
     subscript(_ name: String) -> JSValue { get set }
-    
-    @_disfavoredOverload
     subscript(_ name: JSString) -> JSValue { get set }
-    
-    @_disfavoredOverload
     subscript(_ index: Int) -> JSValue { get set }
     
     var `throwing`: JSThrowingObject { get }
@@ -33,4 +23,13 @@ public protocol JSObjectProtocol {
     func isInstanceOf(_ constructor: JSFunction) -> Bool
     
     func jsValue() -> JSValue
+}
+
+
+@dynamicMemberLookup
+public protocol JSThrowingObjectProtocol {
+    init(_ base: JSObjectProtocol)
+
+    subscript(_ name: String) -> ((ConvertibleToJSValue...) throws -> JSValue)? {get }
+    subscript(dynamicMember name: String) -> ((ConvertibleToJSValue...) throws -> JSValue)? { get }
 }

@@ -7,12 +7,13 @@
 
 import Foundation
 
-public protocol JSValueProtocol {
+@dynamicMemberLookup
+public protocol JSValueProtocol: CustomStringConvertible {
     var boolean: Bool? { get }
     var string: String? { get }
     var jsString: JSString? { get }
     var number: Double? { get }
-    var object: JSObject? { get }
+    var object: JSObjectProtocol? { get set }
     var function: JSFunction? { get }
     var isNull: Bool { get }
     var isUndefined: Bool { get }

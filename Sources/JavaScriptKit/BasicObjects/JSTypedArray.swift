@@ -14,7 +14,7 @@ public protocol TypedArrayElement: ConvertibleToJSValue, ConstructibleFromJSValu
 /// FIXME: [BigInt-based TypedArrays are currently not supported](https://github.com/swiftwasm/JavaScriptKit/issues/56).
 public class JSTypedArray<Element>: JSBridgedClass, ExpressibleByArrayLiteral where Element: TypedArrayElement {
     public static var constructor: JSFunction { Element.typedArrayClass }
-    public var jsObject: JSObject
+    public var jsObject: JSObjectProtocol
 
     public subscript(_ index: Int) -> Element {
         get {
@@ -33,7 +33,7 @@ public class JSTypedArray<Element>: JSBridgedClass, ExpressibleByArrayLiteral wh
         jsObject = Element.typedArrayClass.new(length)
     }
 
-    required public init(unsafelyWrapping jsObject: JSObject) {
+    required public init(unsafelyWrapping jsObject: JSObjectProtocol) {
         self.jsObject = jsObject
     }
 

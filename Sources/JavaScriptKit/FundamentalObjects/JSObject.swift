@@ -14,7 +14,6 @@ import _CJavaScriptKit
 ///
 /// The lifetime of this object is managed by the JavaScript and Swift runtime bridge library with
 /// reference counting system.
-@dynamicMemberLookup
 public class JSObject: JSObjectProtocol, Equatable {
     
     public var id: JavaScriptObjectRef
@@ -141,8 +140,8 @@ extension JSObject: CustomStringConvertible {
 /// Exceptions produced by JavaScript functions will be thrown as `JSValue`.
 @dynamicMemberLookup
 public class JSThrowingObject {
-    private let base: JSObject
-    public init(_ base: JSObject) {
+    private let base: JSObjectProtocol
+    public init(_ base: JSObjectProtocol) {
         self.base = base
     }
 
