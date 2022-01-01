@@ -15,8 +15,9 @@ import _CJavaScriptKit
 /// The lifetime of this object is managed by the JavaScript and Swift runtime bridge library with
 /// reference counting system.
 @dynamicMemberLookup
-public class JSObject: Equatable {
-    internal var id: JavaScriptObjectRef
+public class JSObject: JSObjectProtocol, Equatable {
+    
+    public var id: JavaScriptObjectRef
     init(id: JavaScriptObjectRef) {
         self.id = id
     }

@@ -2,7 +2,7 @@ import _CJavaScriptKit
 
 /// `JSValue` represents a value in JavaScript.
 @dynamicMemberLookup
-public enum JSValue: Equatable {
+public enum JSValue: JSValueProtocol, Equatable {
     case boolean(Bool)
     case string(JSString)
     case number(Double)
