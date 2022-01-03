@@ -11,8 +11,8 @@ import _CJavaScriptKit
 public protocol JSObjectProtocol: ConvertibleToJSValue, CustomStringConvertible {
     var id: JavaScriptObjectRef { get }
     
-    subscript(_ name: String) -> ((ConvertibleToJSValue...) -> JSValue)? { get }
-    subscript(dynamicMember name: String) -> ((ConvertibleToJSValue...) -> JSValue)? { get }
+    subscript(_ name: String) -> ((ConvertibleToJSValue...) -> JSValue)? { get set }
+    subscript(dynamicMember name: String) -> ((ConvertibleToJSValue...) -> JSValue)? { get set }
     subscript(dynamicMember name: String) -> JSValue { get set }
     subscript(_ name: String) -> JSValue { get set }
     subscript(_ name: JSString) -> JSValue { get set }
@@ -30,6 +30,6 @@ public protocol JSObjectProtocol: ConvertibleToJSValue, CustomStringConvertible 
 public protocol JSThrowingObjectProtocol {
     init(_ base: JSObjectProtocol)
 
-    subscript(_ name: String) -> ((ConvertibleToJSValue...) throws -> JSValue)? {get }
-    subscript(dynamicMember name: String) -> ((ConvertibleToJSValue...) throws -> JSValue)? { get }
+    subscript(_ name: String) -> ((ConvertibleToJSValue...) throws -> JSValue)? { get set }
+    subscript(dynamicMember name: String) -> ((ConvertibleToJSValue...) throws -> JSValue)? { get set }
 }

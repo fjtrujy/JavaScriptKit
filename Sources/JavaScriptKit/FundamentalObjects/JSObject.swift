@@ -33,17 +33,21 @@ public class JSObject: JSObjectProtocol, Equatable {
     /// - Returns: The `name` member method binding this object as `this` context.
     @_disfavoredOverload
     public subscript(_ name: String) -> ((ConvertibleToJSValue...) -> JSValue)? {
-        guard let function = self[name].function else { return nil }
-        return { (arguments: ConvertibleToJSValue...) in
-            function(this: self, arguments: arguments)
+        get {
+            guard let function = self[name].function else { return nil }
+            return { (arguments: ConvertibleToJSValue...) in
+                function(this: self, arguments: arguments)
+            }
         }
+        set {}
     }
 
     /// A convenience method of `subscript(_ name: String) -> ((ConvertibleToJSValue...) -> JSValue)?`
     /// to access the member through Dynamic Member Lookup.
     @_disfavoredOverload
     public subscript(dynamicMember name: String) -> ((ConvertibleToJSValue...) -> JSValue)? {
-        self[name]
+        get { self[name] }
+        set { }
     }
 
     /// A convenience method of `subscript(_ name: String) -> JSValue`
