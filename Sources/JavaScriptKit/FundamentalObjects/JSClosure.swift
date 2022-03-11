@@ -59,9 +59,10 @@ public class JSClosure: JSObject, JSClosureProtocol {
 
     private var hostFuncRef: JavaScriptHostFuncRef = 0
 
-    #if JAVASCRIPTKIT_WITHOUT_WEAKREFS
+    // Disabling JAVASCRIPTKIT_WITHOUT_WEAKREFS till they fix https://bugs.swift.org/browse/SR-15611
+//    #if JAVASCRIPTKIT_WITHOUT_WEAKREFS
     private var isReleased: Bool = false
-    #endif
+//    #endif
 
     @available(*, deprecated, message: "This initializer will be removed in the next minor version update. Please use `init(_ body: @escaping ([JSValue]) -> JSValue)` and add `return .undefined` to the end of your closure")
     @_disfavoredOverload
@@ -84,13 +85,14 @@ public class JSClosure: JSObject, JSClosureProtocol {
         Self.sharedClosures[hostFuncRef] = (self, body)
     }
 
-    #if JAVASCRIPTKIT_WITHOUT_WEAKREFS
+    // Disabling JAVASCRIPTKIT_WITHOUT_WEAKREFS till they fix https://bugs.swift.org/browse/SR-15611
+//    #if JAVASCRIPTKIT_WITHOUT_WEAKREFS
     deinit {
         guard isReleased else {
             fatalError("release() must be called on JSClosure objects manually before they are deallocated")
         }
     }
-    #endif
+//    #endif
 }
 
 
@@ -149,7 +151,9 @@ func _call_host_function_impl(
 /// [WeakRefs](https://github.com/tc39/proposal-weakrefs) are already Stage 4,
 /// but was added recently enough that older browser versions don’t support it.
 /// Build with `-Xswiftc -DJAVASCRIPTKIT_WITHOUT_WEAKREFS` to disable the relevant behavior.
-#if JAVASCRIPTKIT_WITHOUT_WEAKREFS
+///
+// Disabling JAVASCRIPTKIT_WITHOUT_WEAKREFS till they fix https://bugs.swift.org/browse/SR-15611
+//#if JAVASCRIPTKIT_WITHOUT_WEAKREFS
 
 // MARK: - Legacy Closure Types
 
@@ -163,7 +167,9 @@ extension JSClosure {
 @_cdecl("_free_host_function_impl")
 func _free_host_function_impl(_ hostFuncRef: JavaScriptHostFuncRef) {}
 
-#else
+//#else
+// Disabling JAVASCRIPTKIT_WITHOUT_WEAKREFS till they fix https://bugs.swift.org/browse/SR-15611
+#if false
 
 extension JSClosure {
 
